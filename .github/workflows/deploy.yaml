@@ -1,0 +1,20 @@
+name: bilibili-deploy
+
+on:
+  workflow_dispatch: # 手动触发
+
+jobs:
+  deploy-bilibili-tool:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Run Deploy
+        timeout-minutes: ${{secrets.TIMEOUT_MINUTES || 15}} # 超时时间(分钟)
+        run: |
+          sudo docker run \
+           --env BILI_CONFIG="${{ secrets.BILI_CONFIG }}" \
+           --env TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" \
+           --env TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" \
+           --env RUN_SCF_ALL=y \
+           -i --rm  \
+           catlair/bilitools-deploy:latest
